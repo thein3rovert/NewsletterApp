@@ -28,10 +28,6 @@ function NewsletterForm(): JSX.Element {
   // Destructuring the `to`, `fromTo`, and `set` functions from the `gsap` object
     const {to, fromTo, set} = gsap
 
-    const  [successMessage, setSuccessMessage] = useState<MembersSuccessResponse>();
-    const [errorMessage, setErrorMessage] = useState("");
-
-
 
   // This helps to handle the form submission
     // This function handles the form submission
@@ -52,26 +48,6 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     to(button, { keyframes: getTrailsKeyframes (button) });
   }
 
-    //Backend API post request calll
-    // Sending a POST request to the "/api/addSubscription" endpoint
-    const res = await fetch("/api/addSubscription", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-
-    // Parsing the JSON response
-    const data = await res.json();
-
-    // Checking for errors in the response
-    if (data.error) {
-      // Handling error response
-      setErrorMessage('Hey, you are already on the list, you are awesome!');
-      setSuccessMessage(undefined);
-    }
-      // Handling success response
-    setSuccessMessage(data.res)
-    setErrorMessage("")
   };
 
 
