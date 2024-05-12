@@ -18,13 +18,10 @@ import { getTrailsKeyframes } from "@/lib/getTrailsKeyframes";
 function NewsletterForm(): JSX.Element {
   // State for the input field
   const [input, setInput] = useState<string>("");
-
   // State for the active state
-  const [active, setActive] = useState<boolean>(false);
-
+  const [active, setActive] = useState(false);
   // Reference to the button element
   const buttonRef = useRef<HTMLButtonElement>(null);
-
   // Destructuring the `to`, `fromTo`, and `set` functions from the `gsap` object
     const {to, fromTo, set} = gsap
 
@@ -43,25 +40,35 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     to(button, {
       keyframes: getPlaneKeyframes(set, fromTo, button, setActive, setInput), // Triggers an animation using gsap
     });
-
     // Second Animation using to gsap 
     to(button, { keyframes: getTrailsKeyframes (button) });
   }
 
+  const res =await fetch ("/api/addSubscription", {
+    method: "POST", 
+    headers: {
+        'Content-Type': 'application/json', 
+    }, 
+    body: JSON.stringify({email}),
+  });
+  const data = await res.json();
+  if (data.error) {
+    console.log(data.error);
+    return
+  }
+  console.log(data);
   };
 
 
   return (
   <div className="flex flex-col space-y-8 md:w-[400px]">
     <form 
-      onSubmit={handleSubmit} className ="newsletter-form mt-10 animate-fade-in-3" 
-      >   
+      onSubmit={handleSubmit} className ="newsletter-form mt-10 animate-fade-in-3" >   
       <div className="group flex items-center gap-x-4 py-1 pl-4 pr-1
       rounded-[9px] bg-[#090d11] hover:bg-[#7c7b83] showdow-outline-gray hover:shadow-transparent focus-within:bg-[#15141B]
       focus-within:!shadow-outline-gray-focus transition-all duration-300">
             {/* Styling the envelop icon*/}
       <EnvelopeIcon className= "hidden sm:inline w-6 h-6 text-[#7c7b83] group-focus-within:text-white group-hover:text-white transition-colors duration-300" >
-
       </EnvelopeIcon>
 
       <input
